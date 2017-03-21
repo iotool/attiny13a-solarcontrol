@@ -8,3 +8,7 @@
 This ATtiny solar controller charges a supercap and power on / off a ESP8266. 
 After reaching 3.6V the ESP866 can power on by a MOSFET and upload sensor values.
 If the supercap goes under 2.6V the ESP8266 will power off and the charges restart. 
+
+## Upload binrary via Arduino as ISP
+
+  C:\arduino-1.6.8\hardware\tools\avr/bin/avrdude -CC:\arduino-1.6.8\hardware\tools\avr/etc/avrdude.conf -v -pattiny13 -cstk500v1 -PCOM4 -b19200 -Uflash:w:C:\Temp\attiny13a_solar-control.ino.hex:i
