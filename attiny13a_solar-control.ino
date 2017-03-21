@@ -11,10 +11,12 @@
 // Wenn der Kondensator unter 2.6V entladen wird, dann wird der Verbraucher ausgeschaltet und der Kondensator geladen.
 // Bei 3.0V Schaltet ein zweiter Schalter ein/aus und kann als LowPower-Signal vom Verbraucher genutzt werden.
 // 
+// Ladezeit Bewoelkung von 1.8V auf 3.6V ca. 13 Minuten fuer 0.47F 5.5V Supercap
+// 
 // HARDWARE:
 // 1x ATtiny13a (Controller)
 // 1x Diode N4001 (Entladeschutz)  VCC---|<|---(+)
-// 1x SuperCap 0.47F 5.5 (Akku)    VCC---| |---GND
+// 1x SuperCap 0.47F 5.5V (Akku)   VCC---| |---GND
 // 1x LED 1.6V 4mA (VCC)           GND---|<|--+[R1]/[R2]
 // 1x Widerstand-1 1 MOhm (VCC)    VCC---[R1]-+[R2]/LED
 // 1x Widerstand-2 10 KOhm (LED)   ADC4--[R2]-+[R1]/LED
@@ -30,6 +32,9 @@
 // WEBLINKS:
 // readVCC:  arduino-1.6.8\hardware\tools\avr\avr\include\avr\iotnx5.h
 // ATtiny13A 14.12.1 ADMUX – ADC Multiplexer Selection Register
+//
+// HISTORIE:
+// 2017-03-21  adjust ADC-VCC 2.6V / 3.7V
 // 
 // BOARD: ATtiny13, 1MHz disable BrownOut
 // PGM 1024 B | VAR 64 B | Bemerkung
@@ -49,15 +54,17 @@
 #define MUX1  1  // Analog Channel Selection Bits
 #define MUX0  0  // Analog Channel Selection Bits
 
+#define DELAY_50MS 60    // 50 ms auf ATtiny13a 
 #define DELAY_100MS 120  // 100 ms auf ATtiny13a 
 #define DELAY_1S 1200    // 1 s auf ATtiny13a
 #define DELAY_ADC 60     // 50 ms auf ATtiny13a
 
-#define ADC_26V 6155  // readAdc() 2.6V
+#define ADC_26V 6237  // readAdc() 2.6V (gemessen 2.59V)
 #define ADC_27V 5970  // readAdc() 2.7V
-#define ADC_30V 5415  // readAdc() 3.0V
+#define ADC_30V 5415  // readAdc() 3.0V (gemessen 3.02V)
 #define ADC_33V 4860  // readAdc() 3.3V
-#define ADC_36V 4568  // readAdc() 3.6V
+#define ADC_36V 4590  // readAdc() 3.6V 
+#define ADC_37V 4568  // readAdc() 3.7V (gemessen 3.58V)
 #define ADC_45V 3690  // readAdc() 4.5V
 
 #define PIN_GETVCC 3  // ADC3=Pin3 Spannung der Solarzelle messen
@@ -78,6 +85,7 @@ int readAdc() {
   // 541.5/1024 = 1.6V/3.0V mit 1.6V LED als Vref
   // 10x Messungen ~ 5415/1024 = 10*1.6V/3.0V
   // 
+  // Berechnung:
   // ADC <= 9350 ~ 1.3V
   // ADC <= 6155 ~ 2.6V
   // ADC <= 5970 ~ 2.7V
@@ -135,7 +143,7 @@ void loop() {
 
   while((lastADC+=555)<6710) {
     digitalWrite(PIN_LED, HIGH);     // LED ein
-    delay(DELAY_100MS);
+    delay(DELAY_50MS);
     digitalWrite(PIN_LED, LOW);      // LED aus
     delay(DELAY_100MS);
   }
