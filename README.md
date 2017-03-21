@@ -15,6 +15,7 @@ If the supercap goes under 2.6V the ESP8266 will power off and charging restarts
 
 ## unlimited tenor
 
-This project using a supercap as a substitute for rechargeable battery. 
-You will need round about 15 minutes to charge 3.6V to a 0.47F supercap or 45 minutes for 1.5F.
- 
+This project using a supercap as a substitute for rechargeable battery charged by a solar panel. 
+You will need 15 minutes to charge a 0.47F supercap to 3.6V with a 6V solar panel to consume 85mAs.
+A supercap 1.5F 5.5V needs 45 minutes and stores 272mAs energy while drop down voltage from 3.6V to 2.6V.
+With 272mAs you can run a ESP8266 for round about 6 seconds to messure and upload sensor values.
